@@ -1,0 +1,11 @@
+{
+    "name": "swisstable",
+    "description": "D port of Swiss Tables",
+    "homepage": "https://github.com/repeatedly/swisstabled",
+    "authors": ["Masahiro Nakagawa"],
+    "copyright": "Copyright (c) 2024, Masahiro Nakagawa",
+    "license": "Apache-2.0",
+    "version": "0.1.0",
+    "targetType": "library",
+    "dflags": ["-preview=in"]
+}

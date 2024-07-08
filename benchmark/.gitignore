@@ -1,0 +1,7 @@
+bin/*
+obj/*
+runbench
+runbench.o
+runbench.d.deps
+.RData
+.Rhistory

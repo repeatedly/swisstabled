@@ -12,6 +12,8 @@ Use dub to add it as a dependency:
 
 # Usage
 
+## Map
+
 Replace built-in AA with `swisstable.Map`.
 
 ```D
@@ -36,10 +38,31 @@ void main()
 }
 ```
 
+## Set
+
+```D
+import std.stdio;
+import swisstable.set;
+
+void main()
+{
+    auto set = Set!(int)();
+
+    foreach (i; 0..10)
+        set.insert(i);
+
+    if (5 in set)
+        // do something
+
+    set.remove([2, 4]);
+    foreach (ref k; set.byKey())
+        writeln("key: ", k);
+}
+```
+
 # TODO
 
 - Support Hasher object if needed
-- Add `Set` type. Follow rdtree interface?
 - Use LDC feature for performance optimization
 - Improve internal data structure, e.g. remove Control.Sentinel
 

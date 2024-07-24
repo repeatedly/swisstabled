@@ -22,7 +22,7 @@ NOTE: This table based containers don't guarantee pointer stability. Range and r
 Copyright: Copyright 2024- Masahiro Nakagawa
 Authros:   Masahiro Nakagawa
 License:   $(HTTP www.apache.org/licenses/LICENSE-2.0, Apache License Version 2.0)
-Credits:   Internal design and logic are based on abseil's hash map. See also
+Credits:   Internal design and logic are based on abseil's hash map/set. See also
            $(HTTP abseil.io/about/design/swisstables, Swiss Tables Design Notes) and $(HTTP github.com/abseil/abseil-cpp/blob/master/absl/container/internal/raw_hash_set.h, abseil's source)
  */
 mixin template Table(Container, KeyType, SlotType, Allocator, alias CallGCRange)
@@ -97,7 +97,7 @@ mixin template Table(Container, KeyType, SlotType, Allocator, alias CallGCRange)
         clear(false);
     }
 
-    /// Returns: the number of key/value pairs in the map.
+    /// Returns: the number of stored slots in the container.
     @property size_t length() const nothrow { return _size; }
 
     /// Returns: the number of current capacity.
@@ -134,7 +134,7 @@ mixin template Table(Container, KeyType, SlotType, Allocator, alias CallGCRange)
     }
 
     /**
-     * Reorganizes the map in place.
+     * Reorganizes the container in place.
      *
      * Params:
      *  cap = new capacity for rehash. Callers can force rehash/resize by specifying 0.
@@ -152,7 +152,7 @@ mixin template Table(Container, KeyType, SlotType, Allocator, alias CallGCRange)
     }
 
     /**
-     * Removes all remaining key-value pairs from a map.
+     * Removes all remaining slots from a container.
      *
      * Params:
      *  reuse = If true, keep allocated memory and reset metadata. Otherwise all resources are disposed.
@@ -317,7 +317,6 @@ mixin template Table(Container, KeyType, SlotType, Allocator, alias CallGCRange)
             auto g = Group(_control + seq.offset);
             foreach (i; g.match(calcH2(hash))) {
                 auto offset = seq.offset(i);
-                // if (key == _slots[offset].key) {  // why Object.opEquals is not 'nothrow'...
                 if (mixin(CompCondition)) {  // why Object.opEquals is not 'nothrow'...
                     found = true;
                     return offset;
@@ -351,7 +350,6 @@ mixin template Table(Container, KeyType, SlotType, Allocator, alias CallGCRange)
             auto g = Group(_control + seq.offset);
             foreach (i; g.match(calcH2(hash))) {
                 auto offset = seq.offset(i);
-                // if (key == _slots[offset].key) {
                 if (mixin(CompCondition)) {
                     found = true;
                     return offset;
@@ -436,7 +434,6 @@ mixin template Table(Container, KeyType, SlotType, Allocator, alias CallGCRange)
             if (!ctrl[i].isTombstone)
                 continue;
 
-            // const hash = rapidhashOf(slot.key, _hashSeed);
             const hash = rapidhashOf(mixin(HashKeyArg), _hashSeed);
             const newI = findFirstNonFull(hash);
             const probeOffseet = probe(cap, hash).offset;

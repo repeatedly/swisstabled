@@ -7,7 +7,7 @@ D port of abseil's Swiss Tables.
 Use dub to add it as a dependency:
 
 ```sh
-% dub install swisstable
+% dub add swisstable
 ```
 
 # Usage
